@@ -13,10 +13,13 @@ const getCountries = async (currencyCode) => {
   return response.data.map((country) => country.name);
 };
 
-getExchangeRate('GBP', 'NZD').then((rate) => {
-  console.log(rate);
-});
+const convertCurrency = async (from, to, amount) => {
+  const rate = await getExchangeRate(from, to);
+  const convertedAmount = (amount * rate).toFixed(2);
+  const countries = await getCountries(to);
+  return `${amount} ${from} is worth ${convertedAmount} ${to}. You can spend it in the following countries: ${countries.join(', ')}`;
+};
 
-getCountries('NZD').then((countries) => {
-  console.log(countries);
+convertCurrency('GBP', 'NZD', 100).then((message) => {
+  console.log(message);
 });
